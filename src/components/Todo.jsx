@@ -1,13 +1,24 @@
 'use client'
+import { DeleteTodo, UpdateTodo } from '@/provider/redux/Todos'
 import { Check, X } from 'lucide-react'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
-const Todos = ({data}) => {
+const Todos = ({data, index}) => {
+    const dispatch = useDispatch()
+    const updateTodoByIndex = () => {
+        dispatch(UpdateTodo(index));
+        toast.info("Todo Updated")
+    }
+    const deleteTodoByIndex = (index) => {
+        dispatch(DeleteTodo(index));
+        toast.success("Todo Deleted")
+    }
     return (
         <tr className='border'> 
                     <td className={`${data.isCompleted ? ('line-through') : (``)}`}>{data.id}</td>
-                    <td>{data.title}</td>
+                    <td className={`${data.isCompleted ? ('line-through') : (``)}`}>{data.title}</td>
                     <td className={`${data.isCompleted ? ('line-through') : (``)}`}>{data.description}</td>
                     <td>{data.isCompleted ? (
                         <div className='flex justify-center items-center'>
@@ -19,8 +30,8 @@ const Todos = ({data}) => {
                         </div>
                     )}</td>
                     <td className='flex justify-center gap-x-5'>
-                    <button className="px-6 py-2 text-white bg-blue-500 rounded-lg">Delete</button>
-                    {!data.isCompleted && (<button className="px-6 py-2 text-white bg-orange-500 rounded-lg">Update</button>)}
+                    <button onClick={() => deleteTodoByIndex(index)} className="px-6 py-2 text-white bg-blue-500 rounded-lg">Delete</button>
+                    {!data.isCompleted && (<button onClick={updateTodoByIndex} className="px-6 py-2 text-white bg-orange-500 rounded-lg">Update</button>)}
                     </td>
                     </tr>
     )
@@ -48,7 +59,7 @@ const Todo = () => {
                         todosState && todosState.length > 0 ? (
                             todosState.map((c,i) => {
                                 return (
-                                    <Todos data={c} key={i} />
+                                    <Todos data={c} index={i} key={i} />
                                 )
                             })
                         ) : (
