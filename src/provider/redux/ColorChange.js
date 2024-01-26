@@ -7,7 +7,8 @@ export const ChangeColor = createSlice({
     },
     reducers:{
         ChangeColorToColor(state, action){
-            state.color = '#000'
+            // state.color = '#000' for direct pr static color change 
+            state.color = action.payload
         }
     }
 })
