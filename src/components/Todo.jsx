@@ -1,22 +1,35 @@
 'use client'
+import { Check, X } from 'lucide-react'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Todos = () => {
+const Todos = ({data}) => {
     return (
         <tr className='border'> 
-                    <td>101</td>
-                    <td>Drink Water</td>
-                    <td>Drink 5 liter of Water</td>
-                    <td>Incomplete</td>
+                    <td className={`${data.isCompleted ? ('line-through') : (``)}`}>{data.id}</td>
+                    <td>{data.title}</td>
+                    <td className={`${data.isCompleted ? ('line-through') : (``)}`}>{data.description}</td>
+                    <td>{data.isCompleted ? (
+                        <div className='flex justify-center items-center'>
+                            <Check color='green' />
+                        </div>
+                    ) : (
+                        <div className='flex justify-center items-center'>
+                            <X color='red' />
+                        </div>
+                    )}</td>
                     <td className='flex justify-center gap-x-5'>
                     <button className="px-6 py-2 text-white bg-blue-500 rounded-lg">Delete</button>
-                    <button className="px-6 py-2 text-white bg-orange-500 rounded-lg">Update</button>
+                    {!data.isCompleted && (<button className="px-6 py-2 text-white bg-orange-500 rounded-lg">Update</button>)}
                     </td>
                     </tr>
     )
 }
 
 const Todo = () => {
+
+    const todosState = useSelector((state) => state.todos.todosArray);
+
   return (
     <>
         <section className="py-10 w-full">
@@ -32,11 +45,17 @@ const Todo = () => {
                 </thead>
                 <tbody>
                     {
-                        Array(10).fill(null).map((c,i) => {
-                            return (
-                                <Todos key={i} />
-                            )
-                        })
+                        todosState && todosState.length > 0 ? (
+                            todosState.map((c,i) => {
+                                return (
+                                    <Todos data={c} key={i} />
+                                )
+                            })
+                        ) : (
+                            <tr>
+                                <td colSpan={5}> No Todos are Added Yet </td>
+                            </tr>
+                        )
                     }
                 </tbody>
             </table>
