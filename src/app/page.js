@@ -1,7 +1,11 @@
 'use client'
-import Todo from "@/components/Todo";
+// import Todo from "@/components/Todo";
+const Todo = dynamic(() => import('@/components/Todo'), {
+  ssr: false
+})
 import { ChangeColorToColor } from "@/provider/redux/ColorChange";
 import { AddTodo } from "@/provider/redux/Todos";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,6 +41,10 @@ export default function Home() {
         }
 
         dispatchTodos(AddTodo(item))
+        setForm({
+          title: '',
+          description: ''
+        })
         toast.success("Todo added")
     } catch (error) {
       console.log("messge", error.message);
